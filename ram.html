@@ -112,6 +112,35 @@
                 font-size: 2.3em;  /* Larger slide number */
             }
         }
+
+        /* Switch to landscape orientation */
+        @media (orientation: landscape) {
+            body {
+                flex-direction: row; /* Switch layout to row for landscape */
+            }
+
+            .slideshow-container {
+                flex: 2; /* Make the slideshow container take more space in landscape */
+                padding: 40px; /* Increased padding for better space in landscape */
+            }
+
+            .controls {
+                position: absolute;
+                bottom: 10px;
+                width: 100%;
+                display: flex;
+                justify-content: center;
+            }
+
+            .button {
+                font-size: 1.6em; /* Increase button size for better interaction in landscape */
+                padding: 15px 30px;
+            }
+
+            .slide-number {
+                font-size: 2em; /* Larger slide number in landscape */
+            }
+        }
     </style>
 </head>
 <body>
