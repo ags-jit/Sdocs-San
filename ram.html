@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ramayana Slideshow</title>
+    <style>
+        /* Reset margin and padding */
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: Arial, sans-serif;
+        }
+
+        /* Full height for the body */
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            background-color: #f4f4f4;
+        }
+
+        .slideshow-container {
+            flex: 1; /* Allow the slideshow to take the remaining space */
+            overflow-y: auto; /* Allow scrolling for the content */
+            padding: 20px;
+            box-sizing: border-box;
+            background-color: #fff;
+            font-weight: bold; /* Make text bold */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .slide {
+            display: none;
+            padding: 15px; /* Reduced padding */
+            box-sizing: border-box;
+            min-height: 300px;
+            text-align: center;
+            width: 100%;
+            height: 100%;
+        }
+
+        .active {
+            display: block;
+        }
+
+        .slide p.content {
+            font-size: 1.8em;  /* Default font size for content */
+            line-height: 1.6;
+            color: #555;
+            text-align: left;
+            margin-bottom: 15px; /* Reduced margin */
+            word-wrap: break-word;
+            white-space: pre-wrap; /* Preserve line breaks */
+            max-width: 90%;  /* Ensure content fits within screen width */
+            word-break: break-word;
+        }
+
+        /* Controls (buttons) at the bottom */
+        .controls {
+            text-align: center;
+            padding: 10px;
+            background-color: #333;
+            color: white;
+        }
+
+        .button {
+            padding: 12px 25px;
+            margin: 5px;
+            background-color: #007BFF;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            font-size: 1.4em;  /* Slightly smaller buttons */
+            border-radius: 5px;
+        }
+
+        .button:hover {
+            background-color: #0056b3;
+        }
+
+        /* Slide number with buttons */
+        .slide-number {
+            font-size: 1.8em; /* Default size for the slide number */
+            margin: 0 15px;
+        }
+
+        /* For smaller screens (like Kindle) */
+        @media (max-width: 768px) {
+            .slide p.content {
+                font-size: 1.6em;  /* Smaller paragraph text */
+            }
+            .button {
+                font-size: 1.3em;
+                padding: 10px 20px;
+            }
+            .slide-number {
+                font-size: 1.6em;  /* Smaller slide number */
+            }
+        }
+
+        /* For very large screens or devices */
+        @media (min-width: 1200px) {
+            .slide p.content {
+                font-size: 2.3em;  /* Larger paragraph text */
+            }
+            .slide-number {
+                font-size: 2.3em;  /* Larger slide number */
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="slideshow-container">
+    <!-- Slides will be dynamically injected here -->
+</div>
+
+<div class="controls">
+    <button class="button" onclick="changeSlide(-1)">Previous</button>
+    <span class="slide-number">Slide 1</span>  <!-- Slide number will update dynamically -->
+    <button class="button" onclick="changeSlide(1)">Next</button>
+</div>
+
+<script>
+    let currentSlide = 0;
+    let slides = [];
+
+    // Fetch content from the provided URL (Ramayana)
+    fetch('https://raw.githubusercontent.com/ags-jit/Sdocs-San/main/Ramayana.txt')
+        .then(response => response.text())
+        .then(data => {
+            parseSlides(data);  // Parse the content to create slides
+            showSlide(currentSlide); // Show the first slide
+        })
+        .catch(error => {
+            console.error('Error fetching Ramayana text:', error);
+        });
+
+    // Function to parse the raw text and create slides
+    function parseSlides(data) {
+        const slideRegex = /Slide (\d+)\s*([\s\S]*?)(?=Slide \d+|$)/g;
+        let match;
+
+        while ((match = slideRegex.exec(data)) !== null) {
+            const slideNumber = match[1];
+            const slideContent = match[2].trim();
+            slides.push({ number: slideNumber, content: slideContent });
+        }
+
+        // Create HTML for slides dynamically
+        const container = document.querySelector('.slideshow-container');
+        slides.forEach((slide, index) => {
+            const slideDiv = document.createElement('div');
+            slideDiv.classList.add('slide');
+            slideDiv.innerHTML = `
+                <p class="content">${slide.content.replace(/\n/g, '<br>')}</p>
+            `;
+            container.appendChild(slideDiv);
+        });
+    }
+
+    // Function to show the current slide
+    function showSlide(n) {
+        const slideElements = document.querySelectorAll('.slide');
+        const slideNumberElement = document.querySelector('.slide-number');
+        
+        if (n >= slideElements.length) currentSlide = 0;
+        if (n < 0) currentSlide = slideElements.length - 1;
+
+        slideElements.forEach((slide, index) => {
+            slide.classList.remove('active');
+            if (index === currentSlide) {
+                slide.classList.add('active');
+            }
+        });
+
+        // Update the slide number
+        slideNumberElement.textContent = `Slide ${slides[currentSlide].number}`;
+    }
+
+    // Function to change the slide
+    function changeSlide(n) {
+        currentSlide += n;
+        showSlide(currentSlide);
+    }
+</script>
+
+</body>
+</html>
