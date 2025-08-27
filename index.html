@@ -48,14 +48,8 @@
             display: block;
         }
 
-        .slide p.slide-number {
-            font-size: 2em;  /* Slightly smaller heading for slide number */
-            color: #333;
-            margin-bottom: 15px;  /* Reduced margin */
-        }
-
         .slide p.content {
-            font-size: 1.5em;  /* Reduced font size for content */
+            font-size: 1.8em;  /* Default font size for content */
             line-height: 1.6;
             color: #555;
             text-align: left;
@@ -89,27 +83,33 @@
             background-color: #0056b3;
         }
 
+        /* Slide number with buttons */
+        .slide-number {
+            font-size: 1.8em; /* Default size for the slide number */
+            margin: 0 15px;
+        }
+
         /* For smaller screens (like Kindle) */
         @media (max-width: 768px) {
-            .slide p.slide-number {
-                font-size: 1.8em;  /* Smaller slide number */
-            }
             .slide p.content {
-                font-size: 1.4em;  /* Smaller paragraph text */
+                font-size: 1.6em;  /* Smaller paragraph text */
             }
             .button {
                 font-size: 1.3em;
                 padding: 10px 20px;
             }
+            .slide-number {
+                font-size: 1.6em;  /* Smaller slide number */
+            }
         }
 
         /* For very large screens or devices */
         @media (min-width: 1200px) {
-            .slide p.slide-number {
-                font-size: 2.5em;  /* Heading size for large screens */
-            }
             .slide p.content {
-                font-size: 2em;  /* Larger paragraph text */
+                font-size: 2.3em;  /* Larger paragraph text */
+            }
+            .slide-number {
+                font-size: 2.3em;  /* Larger slide number */
             }
         }
     </style>
@@ -122,6 +122,7 @@
 
 <div class="controls">
     <button class="button" onclick="changeSlide(-1)">Previous</button>
+    <span class="slide-number">Slide 1</span>  <!-- Slide number will update dynamically -->
     <button class="button" onclick="changeSlide(1)">Next</button>
 </div>
 
@@ -157,7 +158,6 @@
             const slideDiv = document.createElement('div');
             slideDiv.classList.add('slide');
             slideDiv.innerHTML = `
-                <p class="slide-number">Slide ${slide.number}</p>
                 <p class="content">${slide.content.replace(/\n/g, '<br>')}</p>
             `;
             container.appendChild(slideDiv);
@@ -167,6 +167,8 @@
     // Function to show the current slide
     function showSlide(n) {
         const slideElements = document.querySelectorAll('.slide');
+        const slideNumberElement = document.querySelector('.slide-number');
+        
         if (n >= slideElements.length) currentSlide = 0;
         if (n < 0) currentSlide = slideElements.length - 1;
 
@@ -176,6 +178,9 @@
                 slide.classList.add('active');
             }
         });
+
+        // Update the slide number
+        slideNumberElement.textContent = `Slide ${slides[currentSlide].number}`;
     }
 
     // Function to change the slide
