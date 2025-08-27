@@ -151,7 +151,7 @@
 
 <div class="controls">
     <button class="button" onclick="changeSlide(-1)">Previous</button>
-    <span class="slide-number">Slide 1</span>  <!-- Slide number will update dynamically -->
+    <span class="slide-number">Sarga 1</span>  <!-- Slide number will update dynamically -->
     <button class="button" onclick="changeSlide(1)">Next</button>
 </div>
 
@@ -170,15 +170,16 @@
             console.error('Error fetching Bhagavad Gita text:', error);
         });
 
-    // Function to parse the raw text and create slides
+    // Function to parse the raw text and create slides based on Sargas
     function parseSlides(data) {
-        const slideRegex = /Slide (\d+)\s*([\s\S]*?)(?=Slide \d+|$)/g;
+        // Assuming each Sarga starts with "Sarga" and ends with a line break or the next "Sarga"
+        const sargaRegex = /Sarga (\d+)[\s\S]*?(?=Sarga \d+|$)/g;
         let match;
 
-        while ((match = slideRegex.exec(data)) !== null) {
-            const slideNumber = match[1];
-            const slideContent = match[2].trim();
-            slides.push({ number: slideNumber, content: slideContent });
+        while ((match = sargaRegex.exec(data)) !== null) {
+            const sargaNumber = match[1];
+            const sargaContent = match[0].trim();
+            slides.push({ number: sargaNumber, content: sargaContent });
         }
 
         // Create HTML for slides dynamically
@@ -208,8 +209,8 @@
             }
         });
 
-        // Update the slide number
-        slideNumberElement.textContent = `Slide ${slides[currentSlide].number}`;
+        // Update the slide number to Sarga number
+        slideNumberElement.textContent = `Sarga ${slides[currentSlide].number}`;
     }
 
     // Function to change the slide
